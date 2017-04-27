@@ -13,7 +13,10 @@ The example of the model is not usable especially for the marketing data.
 3. Change the model
 4. Reduce the dataset/ Dimensionality reduction
 5. Discover your own way and discuss with us in the community chat at https://gitter.im/neruti-deeplearning/demo2-discussion (as this is a public channel, your idea may catch an employer's attention)
-6. Raise question/issues in gitter 
+6. Raise question/issues in gitter
+
+To read more about convnet:
+http://xrds.acm.org/blog/2016/06/convolutional-neural-networks-cnns-illustrated-explanation/
 
 ### Contributor List
 *Austin Goh*  - austin@neruti.com 

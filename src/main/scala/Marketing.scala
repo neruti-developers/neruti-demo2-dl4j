@@ -1,5 +1,5 @@
 /**
-  * Created by root on 19/04/2017.
+  * Created by Austin on 19/04/2017.
   */
 import java.io.File
 import java.util
@@ -36,8 +36,12 @@ object Marketing {
   val delimiter = ","
 
   def main(args:Array[String]) = {
+    // Load CSV
+    // TODO: You should modify this path to your own directory
     var list =new util.ArrayList(loadCSV("/home/austin/Documents/marketing","bank.csv"))
+    // I do not want the header row so i ge the sublist
     list = new util.ArrayList(list.subList(1,list.size()-1))
+    // ArrayList -> ArrayList[ArrayList[String]]
     var list2 = new util.ArrayList[List[String]]()
     val seed = System.nanoTime
     for(i<-0 until list.size()){
@@ -48,18 +52,26 @@ object Marketing {
       }
       list2.add(list3)
     }
-
+    // The recorder
     val trainRecorder =new ListStringRecordReader()
     trainRecorder.initialize(new ListStringSplit(list2))
+    // iterator having the batch size of 100
+    // target variable at 11th columns(start from 0)
+    // the target has two possibilities -> 0, 1
     val trainIterator = new RecordReaderDataSetIterator(trainRecorder,100,11,2)
+    // this one for test using batch size of 20
     val testIterator = new RecordReaderDataSetIterator(trainRecorder,20,11,2)
     val featuresTrain = new util.ArrayList[INDArray]()
     val featuresTest = new util.ArrayList[INDArray]()
-    val labelsTrain = new util.ArrayList[INDArray]()
     val labelsTest = new util.ArrayList[INDArray]()
+    /***
+      * This is just to split the dataset randomly
+      */
+    // Random with 12345 seeding
     val r = new Random(12345)
     while(trainIterator.hasNext()){
       val ds = trainIterator.next()
+      // Split training and testing to 80:20
       val split = ds.splitTestAndTrain(80,r)
       featuresTrain.add(split.getTrain().getFeatureMatrix)
       val dsTest = split.getTest
@@ -69,8 +81,13 @@ object Marketing {
       val indexesTest = Nd4j.argMax(dsTest.getLabels,1)
       labelsTest.add(indexesTest)
     }
+    /**
+      * Neural network configuration
+      * TODO: Modify the configuration
+      * Q1: Is using RBM a good choice
+      * Q2: Is this the right way of using RBM? (You play and you know, if you get the concept right, you might able to do it)
+      */
 
-    println(featuresTest.size())
     val conf = new NeuralNetConfiguration.Builder()
       .seed(123)    //Random number generator seed for improved repeatability. Optional.
       .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT).iterations(1)
@@ -86,14 +103,25 @@ object Marketing {
       .layer(3, new OutputLayer.Builder(LossFunctions.LossFunction.MSE).activation(Activation.SIGMOID).nIn(15).nOut(2).build())
       .pretrain(true).backprop(true)
       .build()
+
+    // Finish configuration
     val net = new MultiLayerNetwork(conf)
     net.init()
+    // 1 Epoch
     val nEpochs = 1
+    // Loop the epoch
     for (i<- 0 until nEpochs) {
       for(j<-0 until featuresTrain.size()){
+        // Training happen
         net.fit(featuresTrain.get(j))
       }
+      // Evaluation
       val evaluation = net.evaluate(testIterator)
+
+
+      /**
+        * Showing the evaluation statistics and result
+        */
       println(evaluation.stats())
       println(evaluation.getConfusionMatrix)
       println("Epoch "+i+": Testing")
@@ -101,13 +129,8 @@ object Marketing {
         val result = net.predict(featuresTest.get(j))
         for(k<-0 until result.length){
           println("Result for "+featuresTest.get(j).getRow(k)+": "+result(k))
-
         }
       }
-
-
-
-
     }
 
   }
@@ -116,10 +139,10 @@ object Marketing {
     val inputPath = path+fileName
     val timeStamp = String.valueOf(new Date().getTime)
     val outputPath = path+"report_processed_"+timeStamp
-
     val baseTrainDir = new File(path,"train")
-
-
+    /**
+      * The schema
+      */
     val inputDataSchema:Schema = new Schema.Builder()
       .addColumnInteger("age")
       .addColumnString("job")
@@ -138,7 +161,7 @@ object Marketing {
 
     val tp = new TransformProcess.Builder(inputDataSchema)
       .removeColumns("job")
-    .build()
+      .build()
 
     val numActions = tp.getActionList().size()
     for(i<- 0 until numActions){

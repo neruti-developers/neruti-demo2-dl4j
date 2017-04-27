@@ -1,6 +1,3 @@
-import org.apache.commons.io.FilenameUtils;
-import org.apache.spark.SparkConf;
-import org.apache.spark.api.java.JavaSparkContext;
 import org.datavec.api.io.filters.BalancedPathFilter;
 import org.datavec.api.io.labels.ParentPathLabelGenerator;
 import org.datavec.api.split.FileSplit;
@@ -25,8 +22,6 @@ import org.deeplearning4j.nn.conf.layers.*;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
-import org.deeplearning4j.spark.impl.multilayer.SparkDl4jMultiLayer;
-import org.deeplearning4j.spark.impl.paramavg.ParameterAveragingTrainingMaster;
 import org.deeplearning4j.util.ModelSerializer;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.dataset.DataSet;
@@ -38,7 +33,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -54,15 +48,21 @@ import static org.bytedeco.javacpp.opencv_imgproc.COLOR_BGR2YCrCb;
  *  - U.S. Fish and Wildlife Service (animal sample dataset): http://digitalmedia.fws.gov/cdm/
  *  - Tiny ImageNet Classification with CNN: http://cs231n.stanford.edu/reports/leonyao_final.pdf
  *
+ * Additional by Austin Goh(Neruti):
+ * I wrote python code to pulled images from Bing
+ *
  * CHALLENGE: Current setup gets low score results. Can you improve the scores? Some approaches:
  *  - Add additional images to the dataset
  *  - Apply more transforms to dataset
  *  - Increase epochs
  *  - Try different model configurations
  *  - Tune by adjusting learning rate, updaters, activation & loss functions, regularization, ...
+ *
+ *  Hyperparameter(such as number of conv layer, bias....)
  */
 
 public class AnimalsClassification {
+    // Static var
     protected static final Logger log = LoggerFactory.getLogger(AnimalsClassification.class);
     protected static int height = 100;
     protected static int width = 100;
@@ -80,6 +80,7 @@ public class AnimalsClassification {
     protected static int nCores = 2;
     protected static boolean save = true;
 
+    //NOTE: You can try preset model here
     protected static String modelType = "AlexNet"; // LeNet, AlexNet or Custom but you need to fill it out
 
     public void run(String[] args) throws Exception {
@@ -108,6 +109,7 @@ public class AnimalsClassification {
          * Data Setup -> transformation
          *  - Transform = how to tranform images and generate large dataset to train on
          **/
+        // flip transform, warp transform, color transform
         ImageTransform flipTransform1 = new FlipImageTransform(rng);
         ImageTransform flipTransform2 = new FlipImageTransform(new Random(123));
         ImageTransform warpTransform = new WarpImageTransform(rng, 42);
@@ -119,7 +121,6 @@ public class AnimalsClassification {
          *  - how to normalize images and generate large dataset to train on
          **/
         DataNormalization scaler = new ImagePreProcessingScaler(0, 1);
-
         log.info("Build model....");
 
         MultiLayerNetwork network;
@@ -232,7 +233,7 @@ public class AnimalsClassification {
                 .layer(0, convInit("cnn1", channels, 50 ,  new int[]{5, 5}, new int[]{1, 1}, new int[]{0, 0}, 0))
                 .layer(1, maxPool("maxpool1", new int[]{2,2}))
                 .layer(2, conv5x5("cnn2", 100, new int[]{5, 5}, new int[]{1, 1}, 0))
-                .layer(3, maxPool("maxool2", new int[]{2,2}))
+                .layer(3, maxPool("maxpool2", new int[]{2,2}))
                 .layer(4, new DenseLayer.Builder().nOut(500).build())
                 .layer(5, new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
                         .nOut(numLabels)
