@@ -11,7 +11,9 @@ This repo demonstrates using deep learning algorithm to predict and classified p
 This demo is related to direct marketing campaigns of a Portuguese banking instutition.
 
 "The marketing campaigns were based on phone calls. Often, more than one contact to the same client was required, 
-in order to access if the product (bank term deposit) would be (or not) subscribed." 
+in order to access if the product (bank term deposit) would be (or not) subscribed.
+
+The classification goal is to predict if the client will subscribe a term deposit (variable y)." 
 
 On the average website, there is an abundance of information to be collected about who interacts with your product/site
 and how. By leveraging all of this data, we can gain insights into customer behavior. 
@@ -22,9 +24,15 @@ business.
 Predicting customer behavior can tell you which customers to reach out to, in real time, to convert them into 
 tangible outcomes.
 
+![customer behavior prediction result](images/bank-marketing.png)
+
 ### Image Classification with Convolutional Neutral Network(CNN)
 Computer ability to recognize objects has puzzled computer scientists for over 50 years.  CNN is an algorithm that recognize 
 objects in images using deep learning.
+
+This demo illustrates using CNN to classify animal images.
+
+![animal image classification result](images/animal.png)
 
 ##background
 This repo is partially based on [DL4J Github Examples](https://github.com/deeplearning4j/dl4j-examples) with our own 
@@ -41,7 +49,8 @@ This repo has all required modules and dependencies configured.  You may:
 2. Preprocess the dataset
 3. Change the model
 4. Reduce the dataset/ Dimensionality reduction
-5. Discover your own way and discuss with us in the community chat at https://gitter.im/neruti-deeplearning/demo2-discussion (as this is a public channel, your idea may catch an employer's attention)
+5. Discover your own way and discuss with us in the community chat at https://gitter.im/neruti-deeplearning/demo2-discussion 
+(as this is a public channel, your idea may catch an employer's attention)
 6. Raise question/issues in gitter
 
 To read more about convolutional neural network:
@@ -55,7 +64,7 @@ http://xrds.acm.org/blog/2016/06/convolutional-neural-networks-cnns-illustrated-
 *Austin Goh*  - austin@neruti.com 
 
 ---
-***Disclaimer*** *This repo is provided as it-is. You can visit our [community](https://gitter.im/neruti-deeplearning/demo2-discussion) to look for people who succeeded to perform a proper classification and their rate of classification*
+***Disclaimer*** *This repo is provided as it-is. Please visit our [community](https://gitter.im/neruti-deeplearning/demo2-discussion) to connect with people who succeeded to perform classification and their rate of classification*
 
 Enjoy, 
 *Austin (zhao yang)*
