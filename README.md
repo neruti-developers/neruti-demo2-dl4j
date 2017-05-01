@@ -1,7 +1,7 @@
 # Neruti Deep Learning Demo 2
 >   by Neruti Developers
 
-##Introduction
+## Introduction
 This repo demonstrates using deep learning algorithm to predict and classified patterns based on two major data types:
 
 * text
@@ -15,7 +15,7 @@ in order to access if the product (bank term deposit) would be (or not) subscrib
 
 The classification goal is to predict if the client will subscribe a term deposit (variable y)." 
 
-On the average website, there is an abundance of information to be collected about who interacts with your product/site
+There is an abundance of information to be collected about who interacts with your product/site
 and how. By leveraging all of this data, we can gain insights into customer behavior. 
 
 Machine learning techniques can be used to determine which customers may be interested in achieving an outcome with your
@@ -34,7 +34,7 @@ This demo illustrates using CNN to classify animal images.
 
 ![animal image classification result](images/animal.png)
 
-##background
+## Background
 This repo is partially based on [DL4J Github Examples](https://github.com/deeplearning4j/dl4j-examples) with our own 
 additional features:
 
@@ -56,7 +56,7 @@ This repo has all required modules and dependencies configured.  You may:
 To read more about convolutional neural network:
 http://xrds.acm.org/blog/2016/06/convolutional-neural-networks-cnns-illustrated-explanation/
 
-##Citation
+## Citation
 > S. Moro, R. Laureano and P. Cortez. Using Data Mining for Bank Direct Marketing: An Application of the CRISP-DM Methodology. 
 > In P. Novais et al. (Eds.), Proceedings of the European Simulation and Modelling Conference - ESM'2011, pp. 117-121, Guimarães, Portugal, October, 2011. EUROSIS.
 
